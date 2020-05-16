@@ -1,0 +1,17 @@
+[2020-05-15 17:56:34,926 INFO] PPL []
+[2020-05-15 21:22:49,713 INFO] PPL []
+[2020-05-15 21:25:22,980 INFO] Loading checkpoint from ../models/bert_classifier\model_step_100.pt
+[2020-05-15 21:25:30,550 INFO] Loading valid dataset from ../bert_data\cnndm.valid.0.bert.pt, number of examples: 2001
+[2020-05-15 21:25:30,553 INFO] * number of parameters: 109483009
+[2020-05-15 21:30:41,002 INFO] Loading valid dataset from ../bert_data\cnndm.valid.1.bert.pt, number of examples: 2001
+[2020-05-15 21:34:40,662 INFO] Loading checkpoint from ../models/bert_classifier\model_step_100.pt
+[2020-05-15 21:34:48,238 INFO] Loading valid dataset from ../bert_data\cnndm.valid.0.bert.pt, number of examples: 2001
+[2020-05-15 21:34:48,242 INFO] * number of parameters: 109483009
+[2020-05-15 21:39:59,455 INFO] Loading valid dataset from ../bert_data\cnndm.valid.1.bert.pt, number of examples: 2001
+[2020-05-15 21:47:14,859 INFO] Loading checkpoint from ../models/bert_classifier\model_step_100.pt
+[2020-05-15 21:47:23,576 INFO] Loading valid dataset from ../bert_data\cnndm.valid.0.bert.pt, number of examples: 2001
+[2020-05-15 21:47:23,580 INFO] * number of parameters: 109483009
+[2020-05-15 21:52:35,206 INFO] Validation xent: 6.81439 at step 100
+[2020-05-15 21:52:35,400 INFO] Loading checkpoint from ../models/bert_classifier\model_step_100.pt
+[2020-05-15 21:52:38,869 INFO] Loading test dataset from ../bert_data\cnndm.test.0.bert.pt, number of examples: 2001
+[2020-05-15 21:52:38,872 INFO] * number of parameters: 109483009

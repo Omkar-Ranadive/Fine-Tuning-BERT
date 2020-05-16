@@ -1,0 +1,7 @@
+numpy 
+transformers
+tensorboardX
+multiprocess 
+pyrouge
+pytest
+pytorch_pretrained_bert 
