@@ -13,6 +13,8 @@ git clone https://github.com/Omkar-Ranadive/Fine-Tuning-BERT
 ```
 pip install -r requirements.txt
 ```
+* Download the pre-processed data from here (Credits to Yang Liu): https://drive.google.com/open?id=1x0d61LP9UAN389YN00z0Pv-7jQgirVg6
+
 ## Training the model 
 * To download the BERT model, run the following code once 
 ```
