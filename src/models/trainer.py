@@ -10,7 +10,7 @@ from models.reporter import ReportMgr
 from models.stats import Statistics
 from others.logging import logger
 from others.utils import test_rouge, rouge_results_to_str
-
+import io
 
 def _tally_parameters(model):
     n_params = sum([p.nelement() for p in model.parameters()])
@@ -134,6 +134,8 @@ class Trainer(object):
 
         total_stats = Statistics()
         report_stats = Statistics()
+        losses = []
+        n_docs = []
         self._start_report_manager(start_time=total_stats.start_time)
         # Set model in training mode
         self.model.train()
@@ -142,7 +144,8 @@ class Trainer(object):
             reduce_counter = 0
             for i, batch in enumerate(train_iter):
                 if self.n_gpu == 0 or (i % self.n_gpu == self.gpu_rank):
-
+                    # print(type(batch))
+                    # print("Batch size: ", batch.shape)
                     true_batchs.append(batch)
                     normalization += batch.batch_size
                     accum += 1
@@ -162,6 +165,9 @@ class Trainer(object):
                             self.optim.learning_rate,
                             report_stats)
 
+                        losses.append(report_stats.loss)
+                        n_docs.append(report_stats.n_docs)
+                        # print("Loss: {} Docs {} Avg {}".format(report_stats.loss, report_stats.n_docs, report_stats.loss/report_stats.n_docs) )
                         true_batchs = []
                         accum = 0
                         normalization = 0
@@ -175,7 +181,7 @@ class Trainer(object):
                             break
             train_iter = train_iter_fct()
 
-        return total_stats
+        return losses, n_docs
 
     def validate(self, valid_iter, step=0):
         """ Validate model.
@@ -235,8 +241,8 @@ class Trainer(object):
 
         can_path = '%s_step%d.candidate'%(self.args.result_path,step)
         gold_path = '%s_step%d.gold' % (self.args.result_path, step)
-        with open(can_path, 'w') as save_pred:
-            with open(gold_path, 'w') as save_gold:
+        with io.open(can_path, 'w', encoding='utf-8') as save_pred:
+            with io.open(gold_path, 'w', encoding='utf-8') as save_gold:
                 with torch.no_grad():
                     for batch in test_iter:
                         src = batch.src
@@ -294,6 +300,7 @@ class Trainer(object):
                         for i in range(len(gold)):
                             save_gold.write(gold[i].strip()+'\n')
                         for i in range(len(pred)):
+                            print(pred[i].strip())
                             save_pred.write(pred[i].strip()+'\n')
         if(step!=-1 and self.args.report_rouge):
             rouges = test_rouge(self.args.temp_dir, can_path, gold_path)

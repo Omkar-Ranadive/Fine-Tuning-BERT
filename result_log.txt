@@ -1,0 +1,19 @@
+For classifier: 
+With settings: 
+
+-mode train -encoder classifier -dropout 0.1 -bert_data_path ../bert_data/cnndm -model_path ../models/Partial/Classifier -lr 2e-3 -visible_gpus 0  -gpu_ranks 0 -world_size 1 -report_every 50 -save_checkpoint_steps 100 -batch_size 800 -decay_method noam -train_steps 300 -accum_count 2 -log_file ../logs/bert_classifier -use_interval true -warmup_steps 5
+
+
+[2020-05-29 20:03:08,644 INFO] * number of parameters: 109483009
+[2020-05-29 20:03:08,644 INFO] Start training...
+[2020-05-29 20:03:08,770 INFO] Loading train dataset from ../bert_data\cnndm.train.123.bert.pt, number of examples: 2001
+[2020-05-29 20:04:22,759 INFO] Step 50/  300; xent: 3.47; lr: 0.0002828;   3 docs/s;     74 sec
+[2020-05-29 20:05:38,073 INFO] Step 100/  300; xent: 3.37; lr: 0.0002000;   3 docs/s;    149 sec
+[2020-05-29 20:05:38,076 INFO] Saving checkpoint ../models/Partial/Classifier\model_step_100.pt
+[2020-05-29 20:06:53,500 INFO] Step 150/  300; xent: 3.41; lr: 0.0001633;   3 docs/s;    225 sec
+[2020-05-29 20:08:08,805 INFO] Step 200/  300; xent: 3.19; lr: 0.0001414;   3 docs/s;    300 sec
+[2020-05-29 20:08:08,807 INFO] Saving checkpoint ../models/Partial/Classifier\model_step_200.pt
+[2020-05-29 20:09:33,468 INFO] Step 250/  300; xent: 3.16; lr: 0.0001265;   2 docs/s;    385 sec
+[2020-05-29 20:10:49,091 INFO] Step 300/  300; xent: 3.30; lr: 0.0001155;   3 docs/s;    460 sec
+[2020-05-29 20:10:49,093 INFO] Saving checkpoint ../models/Partial/Classifier\model_step_300.pt
+[2020-05-29 20:11:05,665 INFO] Loading train dataset from ../bert_data\cnndm.train.108.bert.pt, number of examples: 2000

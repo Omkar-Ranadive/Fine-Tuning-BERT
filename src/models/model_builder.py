@@ -4,7 +4,7 @@ import torch.nn as nn
 from pytorch_pretrained_bert import BertModel, BertConfig
 from torch.nn.init import xavier_uniform_
 
-from models.encoder import TransformerInterEncoder, Classifier, RNNEncoder, ClassifierDummy
+from models.encoder import TransformerInterEncoder, Classifier, RNNEncoder, ClassifierDummy, Gnn
 from models.optimizers import Optimizer
 
 
@@ -71,6 +71,10 @@ class Summarizer(nn.Module):
                                       dropout=args.dropout)
         elif args.encoder == 'classifierDummy':
             self.encoder = ClassifierDummy(self.bert.model.config.hidden_size)
+
+        elif args.encoder == 'gnn':
+            self.encoder = Gnn(self.bert.model.config.hidden_size)
+
         elif (args.encoder == 'baseline'):
             bert_config = BertConfig(self.bert.model.config.vocab_size, hidden_size=args.hidden_size,
                                      num_hidden_layers=6, num_attention_heads=8, intermediate_size=args.ff_size)
@@ -99,6 +103,7 @@ class Summarizer(nn.Module):
         sents_vec = top_vec[torch.arange(top_vec.size(0)).unsqueeze(1), clss]
         # print("Sent Vec {}, mask_cls: {} mas_cls_trimmed: {}".format(sents_vec.shape, mask_cls.shape, mask_cls[:, :, None].float().shape))
         sents_vec = sents_vec * mask_cls[:, :, None].float()
-        # print(sents_vec.shape)
+        # print("Sent Vec [Before Encoder]", sents_vec.shape)
         sent_scores = self.encoder(sents_vec, mask_cls).squeeze(-1)
+        # print("Final sentence scores: {}", sent_scores.shape)
         return sent_scores, mask_cls

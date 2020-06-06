@@ -15,6 +15,7 @@ class Batch(object):
     def __init__(self, data=None, device=None,  is_test=False):
         """Create a Batch from a list of examples."""
         if data is not None:
+            # print("Data: ", len(data))
             self.batch_size = len(data)
             pre_src = [x[0] for x in data]
             pre_labels = [x[1] for x in data]

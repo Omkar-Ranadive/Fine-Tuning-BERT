@@ -6,6 +6,11 @@ import torch.nn as nn
 from models.neural import MultiHeadedAttention, PositionwiseFeedForward
 from models.rnn import LayerNormLSTM
 
+# Imports for GNN
+from torch_geometric.data import Data
+from itertools import permutations
+from torch_geometric.nn import SAGEConv
+import torch.nn.functional as F
 
 class Classifier(nn.Module):
     def __init__(self, hidden_size):
@@ -15,8 +20,11 @@ class Classifier(nn.Module):
 
     def forward(self, x, mask_cls):
         # print("X: ", x.shape)
+        # print("Inside forward: X {}, Mask {}".format(x.shape, mask_cls.shape))
+        # print("Mask values: ", mask_cls)
         h = self.linear1(x).squeeze(-1)
         sent_scores = self.sigmoid(h) * mask_cls.float()
+        # print("Sent scores: ", sent_scores.shape)
         return sent_scores
 
 
@@ -30,6 +38,64 @@ class ClassifierDummy(nn.Module):
         h = self.linear1(x).squeeze(-1)
         sent_scores = self.softmax(h) * mask_cls.float()
         return sent_scores
+
+
+class Gnn(nn.Module):
+    def __init__(self, hidden_size):
+        super(Gnn, self).__init__()
+        self.linear1 = nn.Linear(hidden_size, 128)
+        self.conv1 = SAGEConv(128, 64)
+        self.conv2 = SAGEConv(64, 1)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x, mask_cls):
+        x = self.linear1(x)
+        # print("After linear: ", x.shape)
+        if x.shape[0] > 1:
+            new_x = []
+            for index, b in enumerate(x):
+                edge_indices, edge_weights = self._get_edges(b)
+                # print("Shapes: ", edge_indices.shape, edge_weights.shape)
+                print("B:", b.shape)
+                g_data = Data(x=b,  edge_index=edge_indices.t().contiguous(), edge_attr=edge_weights).to('cuda')
+                b = self.conv1(x=g_data.x, edge_index=g_data.edge_index, edge_weight=g_data.edge_attr)
+                b = F.relu(b)
+                b = self.conv2(x=b, edge_index=g_data.edge_index, edge_weight=g_data.edge_attr)
+                b = b.T
+                print("B shape final: ", b.shape)
+                new_x.append(b)
+            x = torch.cat(new_x, dim=0)
+            print("New X: ", x.shape)
+        else:
+            edge_indices, edge_weights = self._get_edges(x)
+            # print("Shapes: ", edge_indices.shape, edge_weights.shape)
+            g_data = Data(x=x.squeeze(), edge_index=edge_indices.t().contiguous(), edge_attr=edge_weights).to('cuda')
+            x = self.conv1(x=g_data.x, edge_index=g_data.edge_index, edge_weight=g_data.edge_attr)
+            x = F.relu(x)
+            x = self.conv2(x=x, edge_index=g_data.edge_index, edge_weight=g_data.edge_attr)
+            x = x.T
+        # print("Finally here: ", x.shape)
+        sent_scores = self.sigmoid(x) * mask_cls.float()
+        # print("sent scores: ", sent_scores.shape)
+
+        return sent_scores
+
+    def _get_edges(self, x):
+        # Assume a fully connected graph, i.e all sentences are connected to each other
+
+        x = x.squeeze()
+
+        total_sentences = x.shape[0]
+        edges = list(permutations(range(total_sentences), 2))
+        edge_weights = torch.zeros(len(edges))
+        cos = nn.CosineSimilarity(dim=0)
+
+        for index, (e1, e2) in enumerate(edges):
+            if len(x[e1].shape) > 1:
+                print("X[e1] {}, X[e2] {},  X {}".format(x[e1].shape, x[e2].shape, x.shape))
+            edge_weights[index] = cos(x[e1], x[e2])
+
+        return torch.tensor(edges, dtype=torch.long), edge_weights
 
 
 class PositionalEncoding(nn.Module):

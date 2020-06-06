@@ -21,6 +21,9 @@ from models.model_builder import Summarizer
 from models.trainer import build_trainer
 from others.logging import logger, init_logger
 
+import matplotlib.pyplot as plt
+from src.utils import save_pickle
+
 model_flags = ['hidden_size', 'ff_size', 'heads', 'inter_layers','encoder','ff_actv', 'use_interval','rnn_size']
 
 
@@ -120,8 +123,10 @@ def wait_and_validate(args, device_id):
 
     timestep = 0
     if (args.test_all):
+        print("In here!")
         cp_files = sorted(glob.glob(os.path.join(args.model_path, 'model_step_*.pt')))
         cp_files.sort(key=os.path.getmtime)
+        print("Cp files", cp_files)
         xent_lst = []
         for i, cp in enumerate(cp_files):
             step = int(cp.split('.')[-2].split('_')[-1])
@@ -270,12 +275,14 @@ def train(args, device_id):
 
     logger.info(model)
     trainer = build_trainer(args, device_id, model, optim)
-    trainer.train(train_iter_fct, args.train_steps)
+    losses, n_docs = trainer.train(train_iter_fct, args.train_steps)
 
+    save_pickle(losses, 'losses_classifier')
+    save_pickle(n_docs, 'docs_classifier')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-encoder", default='classifier', type=str, choices=['classifier','transformer','rnn','baseline', 'classifierDummy'])
+    parser.add_argument("-encoder", default='classifier', type=str, choices=['classifier','transformer','rnn','baseline', 'classifierDummy', 'gnn'])
     parser.add_argument("-mode", default='train', type=str, choices=['train','validate','test'])
     parser.add_argument("-bert_data_path", default='../bert_data/cnndm')
     parser.add_argument("-model_path", default='../models/')

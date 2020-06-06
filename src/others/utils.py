@@ -100,3 +100,8 @@ def rouge_results_to_str(results_dict):
         results_dict["rouge_2_recall"] * 100,
         results_dict["rouge_l_recall"] * 100
     )
+
+if __name__ == '__main__':
+    path = '../results/rogue/'
+    test_rouge('../results/rogue', path+'clas.txt', path+'gold,txt')
+

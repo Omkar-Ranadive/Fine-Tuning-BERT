@@ -15,3 +15,30 @@
 [2020-05-15 21:52:35,400 INFO] Loading checkpoint from ../models/bert_classifier\model_step_100.pt
 [2020-05-15 21:52:38,869 INFO] Loading test dataset from ../bert_data\cnndm.test.0.bert.pt, number of examples: 2001
 [2020-05-15 21:52:38,872 INFO] * number of parameters: 109483009
+[2020-05-29 22:28:37,178 INFO] PPL []
+[2020-05-29 22:29:29,638 INFO] PPL []
+[2020-05-29 22:29:43,070 INFO] PPL []
+[2020-05-29 22:29:50,057 INFO] PPL []
+[2020-05-29 22:32:45,868 INFO] PPL []
+[2020-05-29 22:33:39,418 INFO] PPL []
+[2020-05-29 22:33:56,527 INFO] PPL []
+[2020-05-29 22:34:37,328 INFO] Loading checkpoint from ../models/Partial/Classifier\model_step_300.pt
+[2020-05-29 22:35:19,980 INFO] Loading valid dataset from ../bert_data\cnndm.valid.0.bert.pt, number of examples: 2001
+[2020-05-29 22:35:19,988 INFO] * number of parameters: 109483009
+[2020-05-29 22:40:32,279 INFO] Validation xent: 6.73204 at step 300
+[2020-05-29 22:40:32,420 INFO] PPL [(6.7320442676901635, '../models/Partial/Classifier\\model_step_300.pt')]
+[2020-05-29 22:40:32,421 INFO] Loading checkpoint from ../models/Partial/Classifier\model_step_300.pt
+[2020-05-29 22:40:36,082 INFO] Loading test dataset from ../bert_data\cnndm.test.0.bert.pt, number of examples: 2001
+[2020-05-29 22:40:36,086 INFO] * number of parameters: 109483009
+[2020-05-29 22:44:54,436 INFO] Loading checkpoint from ../models/Partial/Classifier\model_step_300.pt
+[2020-05-29 22:45:03,662 INFO] Loading valid dataset from ../bert_data\cnndm.valid.0.bert.pt, number of examples: 2001
+[2020-05-29 22:45:03,670 INFO] * number of parameters: 109483009
+[2020-05-29 22:50:21,238 INFO] Validation xent: 6.73204 at step 300
+[2020-05-29 22:50:21,607 INFO] PPL [(6.7320442676901635, '../models/Partial/Classifier\\model_step_300.pt')]
+[2020-05-29 22:50:21,607 INFO] Loading checkpoint from ../models/Partial/Classifier\model_step_300.pt
+[2020-05-29 22:50:54,755 INFO] Loading test dataset from ../bert_data\cnndm.test.0.bert.pt, number of examples: 2001
+[2020-05-29 22:50:54,781 INFO] * number of parameters: 109483009
+[2020-05-29 22:56:06,642 INFO] Loading test dataset from ../bert_data\cnndm.test.1.bert.pt, number of examples: 2001
+[2020-05-29 23:10:38,172 INFO] Loading checkpoint from ../models/Partial/Gnn\model_step_300.pt
+[2020-05-29 23:11:08,822 INFO] Loading valid dataset from ../bert_data\cnndm.valid.0.bert.pt, number of examples: 2001
+[2020-05-29 23:11:08,825 INFO] * number of parameters: 109597249
